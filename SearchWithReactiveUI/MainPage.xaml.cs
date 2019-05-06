@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ReactiveUI;
 using SearchWithReactiveUI.ViewModels;
 using Xamarin.Forms;
 
@@ -18,7 +19,7 @@ namespace SearchWithReactiveUI
         {
             InitializeComponent();
 
-            BindingContext = new MainPageViewModel();
+            BindingContext = new MainPageViewModel(RxApp.TaskpoolScheduler);
         }
     }
 }
