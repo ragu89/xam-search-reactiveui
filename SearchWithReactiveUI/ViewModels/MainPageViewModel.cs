@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -18,7 +19,7 @@ namespace SearchWithReactiveUI.ViewModels
 
             ItemsDisplayed = items; // Initial value
 
-            SearchCommand = new Command(SearchCommandExecute);
+            SearchCommand = new Command(async () => await SearchCommandExecuteAsync());
         }
 
         private string searchText;
@@ -45,7 +46,7 @@ namespace SearchWithReactiveUI.ViewModels
 
         public ICommand SearchCommand { get; private set; }
 
-        private void SearchCommandExecute()
+        private async Task SearchCommandExecuteAsync()
         {
             if(string.IsNullOrEmpty(SearchText))
             {
@@ -55,6 +56,9 @@ namespace SearchWithReactiveUI.ViewModels
             {
                 var lowerSearch = SearchText.ToLower();
                 var listResult = items.Where(item => item.ToLower().Contains(lowerSearch)).ToList();
+
+                await Task.Delay(1000); // Faking a time consuming query during the search
+
                 ItemsDisplayed = new ObservableCollection<string>(listResult);
             }
         }
