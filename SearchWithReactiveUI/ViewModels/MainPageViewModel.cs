@@ -21,12 +21,30 @@ namespace SearchWithReactiveUI.ViewModels
 
             ItemsDisplayed = items; // Initial value
 
-            searchCommand = new Command(async () => await SearchCommandExecuteAsync());
-
             this.WhenAnyValue(x => x.SearchText)
-                .Throttle(TimeSpan.FromSeconds(1.0), RxApp.TaskpoolScheduler) // Only run the command when SearchText hasn't changed since 1.0 second
+                .Throttle(TimeSpan.FromSeconds(1.0), RxApp.TaskpoolScheduler) // Only run the search when SearchText hasn't changed since 1.0 second
+                //.Select(searchText => searchText.ToLower())                 // Doesn't work, don't know why
                 .DistinctUntilChanged()
-                .InvokeCommand(searchCommand);
+                .Subscribe(async searchText => await SearchForAsync(searchText));
+        }
+
+        private async Task SearchForAsync(string text)
+        {
+            Console.WriteLine($"SearchCommand called for text : {text}");
+
+            if (string.IsNullOrEmpty(text))
+            {
+                ItemsDisplayed = items;
+            }
+            else
+            {
+                var lowerSearch = text.ToLower();
+                var listResult = items.Where(item => item.ToLower().Contains(lowerSearch)).ToList();
+
+                await Task.Delay(900); // Faking a time consuming query during the search
+
+                ItemsDisplayed = new ObservableCollection<string>(listResult);
+            }
         }
 
         private string searchText;
@@ -48,26 +66,6 @@ namespace SearchWithReactiveUI.ViewModels
             {
                 itemsDisplayed = value;
                 OnPropertyChanged(nameof(ItemsDisplayed));
-            }
-        }
-
-        private ICommand searchCommand { get; set; } // The Command is now private because it's not binded anymore to the view
-        private async Task SearchCommandExecuteAsync()
-        {
-            Console.WriteLine($"SearchCommand called for text : {SearchText}");
-
-            if(string.IsNullOrEmpty(SearchText))
-            {
-                ItemsDisplayed = items;
-            }
-            else
-            {
-                var lowerSearch = SearchText.ToLower();
-                var listResult = items.Where(item => item.ToLower().Contains(lowerSearch)).ToList();
-
-                await Task.Delay(900); // Faking a time consuming query during the search
-
-                ItemsDisplayed = new ObservableCollection<string>(listResult);
             }
         }
 
