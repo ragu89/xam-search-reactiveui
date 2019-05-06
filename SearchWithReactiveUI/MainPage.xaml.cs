@@ -20,10 +20,5 @@ namespace SearchWithReactiveUI
 
             BindingContext = new MainPageViewModel();
         }
-
-        void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            (BindingContext as MainPageViewModel).SearchCommand.Execute(null);
-        }
     }
 }
