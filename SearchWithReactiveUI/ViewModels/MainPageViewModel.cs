@@ -11,7 +11,7 @@ using SearchWithReactiveUI.Services;
 
 namespace SearchWithReactiveUI.ViewModels
 {
-    public class MainPageViewModel : INotifyPropertyChanged
+    public class MainPageViewModel : INotifyPropertyChanged, IMainPageViewModel
     {
         private readonly IBusinessService businessService;
         private readonly ObservableCollection<string> items;
@@ -73,7 +73,7 @@ namespace SearchWithReactiveUI.ViewModels
         public bool IsSearchRunning
         {
             get => isSearchRunning;
-            set
+            private set
             {
                 isSearchRunning = value;
                 OnPropertyChanged(nameof(IsSearchRunning));
@@ -84,7 +84,7 @@ namespace SearchWithReactiveUI.ViewModels
         public ObservableCollection<string> ItemsDisplayed
         {
             get => itemsDisplayed;
-            set
+            private set
             {
                 itemsDisplayed = value;
                 OnPropertyChanged(nameof(ItemsDisplayed));
