@@ -5,16 +5,21 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using ReactiveUI;
+using SearchWithReactiveUI.Services;
 
 namespace SearchWithReactiveUI.ViewModels
 {
     public class MainPageViewModel : INotifyPropertyChanged
     {
+        private readonly IBusinessService businessService;
         private readonly ObservableCollection<string> items;
 
-        public MainPageViewModel(IScheduler scheduler)
+        public MainPageViewModel(IScheduler scheduler, IBusinessService businessService)
         {
+            this.businessService = businessService;
+
             items = new ObservableCollection<string> { "John", "Tom", "Alex", "Tomas", "Alexandre", "Johnatan", "Jonas", "Joel", "James" };
 
             ItemsDisplayed = items; // Initial value
@@ -23,10 +28,10 @@ namespace SearchWithReactiveUI.ViewModels
                 .Throttle(TimeSpan.FromSeconds(1.0), scheduler) // Only run the search when SearchText hasn't changed since 1.0 second
                 //.Select(searchText => searchText.ToLower())   // Doesn't work, don't know why
                 .DistinctUntilChanged()
-                .Subscribe(searchText => SearchForAsync(searchText));
+                .Subscribe(async searchText => await SearchForAsync(searchText));
         }
 
-        private void SearchForAsync(string text)
+        private async Task SearchForAsync(string text)
         {
             Console.WriteLine($"SearchCommand called for text : {text}");
 
@@ -39,7 +44,11 @@ namespace SearchWithReactiveUI.ViewModels
                 var lowerSearch = text.ToLower();
                 var listResult = items.Where(item => item.ToLower().Contains(lowerSearch)).ToList();
 
-                //await Task.Delay(900); // Faking a time consuming query during the search
+                var result = await businessService.DoSomethingTakingTimeAsync();
+                if (!result)
+                {
+                    throw new Exception("The business service has returned an error");
+                }
 
                 ItemsDisplayed = new ObservableCollection<string>(listResult);
             }

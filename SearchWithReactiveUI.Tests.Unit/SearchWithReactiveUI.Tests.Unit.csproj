@@ -12,6 +12,7 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
     <PackageReference Include="ReactiveUI" Version="9.13.1" />
     <PackageReference Include="ReactiveUI.Testing" Version="9.13.1" />
+    <PackageReference Include="Moq" Version="4.10.1" />
   </ItemGroup>
 
   <ItemGroup>
