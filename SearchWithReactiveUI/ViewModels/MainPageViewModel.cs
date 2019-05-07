@@ -41,6 +41,8 @@ namespace SearchWithReactiveUI.ViewModels
             }
             else
             {
+                IsSearchRunning = true;
+
                 var lowerSearch = text.ToLower();
                 var listResult = items.Where(item => item.ToLower().Contains(lowerSearch)).ToList();
 
@@ -51,6 +53,8 @@ namespace SearchWithReactiveUI.ViewModels
                 }
 
                 ItemsDisplayed = new ObservableCollection<string>(listResult);
+
+                IsSearchRunning = false;
             }
         }
 
@@ -62,6 +66,17 @@ namespace SearchWithReactiveUI.ViewModels
             {
                 searchText = value;
                 OnPropertyChanged(nameof(SearchText));
+            }
+        }
+
+        private bool isSearchRunning;
+        public bool IsSearchRunning
+        {
+            get => isSearchRunning;
+            set
+            {
+                isSearchRunning = value;
+                OnPropertyChanged(nameof(IsSearchRunning));
             }
         }
 

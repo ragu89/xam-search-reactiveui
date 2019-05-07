@@ -5,14 +5,21 @@
              x:Class="SearchWithReactiveUI.MainPage"
              Title="Search page">
     
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        
-        <SearchBar Grid.Row="0" Placeholder="Search items..." Text="{Binding SearchText}" />
-        <ListView Grid.Row="1" ItemsSource="{Binding ItemsDisplayed}" />
-    </Grid>
+    <AbsoluteLayout VerticalOptions="Fill">
+
+        <Grid AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            
+            <SearchBar Grid.Row="0" Placeholder="Search items..." Text="{Binding SearchText}" />
+            <ListView Grid.Row="1" ItemsSource="{Binding ItemsDisplayed}" />
+        </Grid>
+    
+        <ActivityIndicator IsVisible="{Binding IsSearchRunning}" IsRunning="true" Color="Black" BackgroundColor="White" Opacity=".5"
+                           AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1"/>
+    
+    </AbsoluteLayout>
     
 </ContentPage>
